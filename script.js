@@ -1,6 +1,6 @@
 var facturaj;
 $.ajax({
-    url: "https://raw.githubusercontent.com/aiken88/CSV/main/facturas.csv",
+    url: "https://raw.githubusercontent.com/aiken88/CSV/main/facturas2.csv",
 	async : false,
     success: function(csv) {
         const output = Papa.parse(csv, {
@@ -31,11 +31,15 @@ const mesgas = new Array();
 const Ekwhgas =  new Array();
 const PotEdgas =  new Array();
 const kwhgas =  new Array();
+const Ediaagua =  new Array();
+const kwhagua =  new Array();
+const mesagua = new Array();
+const Ekwhagua =  new Array();
 //------------------------LUZ-----------------------------
 for (var i = 0; i < Object.keys(facturaj).length; i++){
 	if (facturaj[i]['producto'] == 'luz'){
-		//console.log(facturaj[i]['kwh']);
-		mesluz.push(facturaj[i]['enddatecad']);
+		//console.log(facturaj[i]['Etotal']);
+		mesluz.push(facturaj[i]['enddate']);
 		Edialuz.push(facturaj[i]['Etotal']/facturaj[i]['dias']);
 		Ekwhluz.push(facturaj[i]['Ekwh']);
 		PotEdluz.push(facturaj[i]['PotEd']);
@@ -45,10 +49,18 @@ for (var i = 0; i < Object.keys(facturaj).length; i++){
 	else if (facturaj[i]['producto'] == 'gas'){
 		//console.log(facturaj[i]['kwh']);
 		Ediagas.push(facturaj[i]['Etotal']/facturaj[i]['dias']);
-		mesgas.push(facturaj[i]['enddatecad']);
+		mesgas.push(facturaj[i]['enddate']);
 		Ekwhgas.push(facturaj[i]['Ekwh']);
 		PotEdgas.push(facturaj[i]['PotEd']);
 		kwhgas.push(facturaj[i]['kwh']/facturaj[i]['dias']);
+	}
+//---------------------AGUA---------------------------------
+	else if (facturaj[i]['producto'] == 'agua'){
+		//console.log(facturaj[i]['kwh']);
+		Ediaagua.push(facturaj[i]['Etotal']/facturaj[i]['dias']);
+		mesagua.push(facturaj[i]['enddate']);
+		kwhagua.push(facturaj[i]['kwh']);
+		Ekwhagua.push(facturaj[i]['Ekwh']);
 	}
 	
 }
@@ -112,6 +124,27 @@ const kwhgasg = {
     data: kwhgas, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
     backgroundColor: 'rgba(162, 50, 52, 0.2)', // Color de fondo
     borderColor: 'rgba(162, 50, 52, 1)', // Color del borde
+    borderWidth: 1,// Ancho del borde
+};
+const Ediasaguag = {
+    label: "€/dia de agua",
+    data: Ediaagua, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo
+    borderColor: 'rgba(54, 162, 235, 1)', // Color del borde
+    borderWidth: 1,// Ancho del borde
+};
+const kwhaguag = {
+    label: "m3 consumidos de agua",
+    data: kwhagua, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo
+    borderColor: 'rgba(54, 162, 235, 1)', // Color del borde
+    borderWidth: 1,// Ancho del borde
+};
+const Ekwhaguag = {
+    label: "€/máximo m3 agua",
+    data: Ekwhagua, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo
+    borderColor: 'rgba(54, 162, 235, 1)', // Color del borde
     borderWidth: 1,// Ancho del borde
 };
 //configuración del grafico
@@ -259,6 +292,60 @@ const kwhgasc ={
         },
     }
 };
+const Ediasaguac ={
+    type: 'bar',
+    data: {
+        labels: mesagua,
+        datasets: [
+            Ediasaguag,
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+        },
+    }
+};
+const kwhaguac ={
+    type: 'bar',
+    data: {
+        labels: mesagua,
+        datasets: [
+            kwhaguag,
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+        },
+    }
+};
+const Ekwhaguac ={
+    type: 'bar',
+    data: {
+        labels: mesagua,
+        datasets: [
+            Ekwhaguag,
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+        },
+    }
+};
 //Render
 const grafica1 = new Chart(
     document.getElementById('grafica1'),
@@ -291,4 +378,16 @@ const grafica7 = new Chart(
 const grafica8 = new Chart(
     document.getElementById('grafica8'),
     kwhgasc
+);
+const grafica9 = new Chart(
+    document.getElementById('grafica9'),
+    Ediasaguac
+);
+const grafica10 = new Chart(
+    document.getElementById('grafica10'),
+    kwhaguac
+);
+const grafica11 = new Chart(
+    document.getElementById('grafica11'),
+    Ekwhaguac
 );
